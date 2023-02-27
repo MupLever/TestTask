@@ -3,6 +3,7 @@
 require 'date'
 
 class PeriodChain
+  attr_reader :periods
   def initialize(start_date, periods)
     @start_date = Date.strptime(start_date, '%d.%m.%Y')
     @periods = periods
