@@ -8,44 +8,43 @@ class PeriodChain
     @periods = periods
   end
 
-  # def add(_type)
-  #   last_period = @periods.last
-  #   case _type
-  #   when 'daily'
-      
-  #   when 'monthly'
-      
-  #   when 'annually'
-      
-  #   end
-  # end
+  def add(_type)
+    return unless valid?
+
+    case _type
+    when 'daily'
+      @periods.append("#{@last_date.year}M#{@last_date.month}D#{@last_date.day}")
+    when 'monthly'
+      @periods.append("#{@last_date.year}M#{@last_date.month}")
+    when 'annually'
+      @periods.append(@last_date.year.to_s)
+    end
+  end
 
   def valid?
-    temp_date = @start_date
-    shift = temp_date.day
+    @last_date = @start_date
+    shift = @last_date.day
     @periods.each do |period|
+      date = identify_to_date(period)
       if period.include?('D')
-        date = Date.new(*period.split(/[MD]/).map(&:to_i))
-        return false unless date.eql?(temp_date)
+        return false unless date.eql?(@last_date)
 
-        temp_date, shift = temp_date.next_day
-        shift = temp_date.day
+        @last_date, shift = @last_date.next_day
+        shift = @last_date.day
 
       elsif period.include?('M')
-        date = Date.new(*period.split('M').map(&:to_i))
-        return false unless date.year == temp_date.year && date.month == temp_date.month
+        return false unless [date.year, date.month].eql?([@last_date.year, @last_date.month])
 
-        temp_date = temp_date.next_month
-        mdays = count_days_in_month(temp_date.month, temp_date.year)
-        temp_date = Date.new(temp_date.year, temp_date.month, shift) if shift <= mdays
+        @last_date = @last_date.next_month
+        mdays = count_days_in_month(@last_date.month, @last_date.year)
+        @last_date = Date.new(@last_date.year, @last_date.month, shift) if shift <= mdays
 
       else
-        date = Date.new(period.to_i)
-        return false unless date.year == temp_date.year
+        return false unless date.year.eql?(@last_date.year)
 
-        temp_date = temp_date.next_year
+        @last_date = @last_date.next_year
       end
-      # p "[#{index}]: #{temp_date}"
+      # p "#{@last_date}"
     end
     true
   end
@@ -58,4 +57,9 @@ class PeriodChain
     mdays[month]
   end
 
+  def identify_to_date(period)
+    return Date.new(*period.split(/[MD]/).map(&:to_i)) if period.match?(/[MD]/)
+
+    Date.new(period.to_i)
+  end
 end

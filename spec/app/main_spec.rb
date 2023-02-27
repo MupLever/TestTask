@@ -60,4 +60,21 @@ RSpec.describe PeriodChain do
       expect(period_chain.valid?).to eq(true)
     end
   end
+
+  context '#add' do
+    it 'Example 1' do
+      period_chain = PeriodChain.new('15.01.2023', %w[2023M1 2023M2])
+      expect(period_chain.add('monthly')).to eq(%w[2023M1 2023M2 2023M3])
+    end
+
+    it 'Example 2' do
+      period_chain = PeriodChain.new('15.01.2023', %w[2023M1 2023M2])
+      expect(period_chain.add('annually')).to eq(%w[2023M1 2023M2 2023])
+    end
+
+    it 'Example 3' do
+      period_chain = PeriodChain.new('15.01.2023', %w[2023M1 2023M2])
+      expect(period_chain.add('daily')).to eq(%w[2023M1 2023M2 2023M3D15])
+    end
+  end
 end
