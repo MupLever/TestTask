@@ -1,1 +1,1 @@
-require_relative '../lib/main.rb'
+require_relative '../app/main.rb'

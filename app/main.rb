@@ -32,7 +32,7 @@ class PeriodChain
         temp = temp.next_year
 
       end
-      p "[#{index}]: #{temp}"
+      # p "[#{index}]: #{temp}"
     end
     true
   end
