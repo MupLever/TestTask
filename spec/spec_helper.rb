@@ -1,1 +1,3 @@
-require_relative '../app/main.rb'
+# frozen_string_literal: true
+
+require_relative '../app/main'
