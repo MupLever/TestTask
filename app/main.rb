@@ -8,20 +8,14 @@ class PeriodChain
     @periods = periods
   end
 
-  def add(type)
+  def add(_type)
     last_period = @periods.last
-  end
-
-  private def count_days_in_month(month, year)
-    mdays = [nil,31,28,31,30,31,30,31,31,30,31.30,31]
-    mdays[2] = 29 if Date.leap?(year)
-    mdays[month]
   end
 
   def valid?
     temp_date = @start_date
     shift = temp_date.day
-    @periods.each_with_index do |period, index|
+    @periods.each_with_index do |period, _index|
       if period.include?('D')
         date = Date.new(*period.split(/[MD]/).map(&:to_i))
         return false unless date.eql?(temp_date)
@@ -48,7 +42,12 @@ class PeriodChain
     end
     true
   end
-end
 
-period_chain = PeriodChain.new('30.01.2023', ["2023M1D30", "2023M1", "2023M2", "2023", "2024M3", "2024M4D30", "2024M5"])
-p period_chain.valid?
+  private
+
+  def count_days_in_month(month, year)
+    mdays = [nil, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31.30, 31]
+    mdays[2] = 29 if Date.leap?(year)
+    mdays[month]
+  end
+end
