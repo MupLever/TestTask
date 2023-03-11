@@ -30,7 +30,7 @@ class PeriodChain
       if period.include?('D')
         return false unless date.eql?(@last_date)
 
-        @last_date, shift = @last_date.next_day
+        @last_date = @last_date.next_day
         shift = @last_date.day
 
       elsif period.include?('M')
